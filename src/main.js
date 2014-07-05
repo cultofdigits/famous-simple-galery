@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var Easing = require("famous/transitions/Easing");
 
     var mainContext = Engine.createContext();
+    mainContext.setPerspective(1000);
     var Card = function(params){
       var self = this;
       this.getAngle     = (function(){ return params.angle })();
@@ -34,6 +35,19 @@ define(function(require, exports, module) {
       this.rotate = new StateModifier({
         transform: Transform.rotateY(-this.getAngle)
       })
+
+      this.wind = new StateModifier();
+      this.windDirect = Math.random() > 0.5? -1: 1;
+
+      (function wind(){
+        self.windDirect = - self.windDirect;
+        var duration = 1000 + Math.random() * 2000;
+        self.wind.setTransform(Transform.rotateY(Math.random()*self.windDirect * Math.PI / 36), {duration: duration})
+        setTimeout(function(){
+          wind()
+        } , duration + Math.random() * 5000);
+      })();
+
     }
 
     var c = new Card({
@@ -45,5 +59,5 @@ define(function(require, exports, module) {
         angle: 0
     })
 
-    mainContext.add(c.translate).add(c.rotate).add(c.surface);
+    mainContext.add(c.translate).add(c.wind).add(c.rotate).add(c.surface);
 });
