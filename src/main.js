@@ -6,35 +6,44 @@ define(function(require, exports, module) {
     var Easing = require("famous/transitions/Easing");
 
     var mainContext = Engine.createContext();
+    var Card = function(params){
+      var self = this;
+      this.getAngle     = (function(){ return params.angle })();
+      this.getX         = (function(){ return params.x })();
+      this.getY         = (function(){ return params.y })();
+      this.getZ         = (function(){ return params.z })();
+      this.getW         = (function(){ return params.w })();
+      this.getH         = (function(){ return params.h })();
+      this.getMouseover = (function(){ return params.mouseover })();
+      this.getMouseout  = (function(){ return params.mouseout })();
 
-    var Surface       = require('famous/core/Surface');
-    var firstSurface = new Surface({
-        size: [100, 50],
-        content: 'Привет!!',
-        properties: {
-          color: 'white',
-          textAlign: 'center',
-          backgroundColor: '#FA5C4F'
+      this.surface = new Surface({
+        size: [this.getW, this.getW],
+
+        properties:{
+          backgroundColor: '#FA5C4F',
+          boxShadow: "0 0 50px rgba(0,0,0,0.5)",
         }
-    });
+      });
 
-    var updown = 1;
-    var translate = new StateModifier({
-        origin: [.5,.5], //выполняем трансформацию относительно центра
+      this.translate = new StateModifier({
+        origin: [.5,.5],
+        transform: Transform.translate(this.getX,this.getY,this.getZ)
+      })
+
+      this.rotate = new StateModifier({
+        transform: Transform.rotateY(-this.getAngle)
+      })
+    }
+
+    var c = new Card({
+        x: 0,
+        y: 0,
+        z: 0,
+        w: 500,
+        h: 500,
+        angle: 0
     })
 
-    var angle = 0;
-
-    var rotate = new StateModifier({
-        transform: Transform.rotateZ(angle)
-    })
-
-    firstSurface.on("click", function(){
-        angle = angle + Math.PI;
-        rotate.setTransform(Transform.rotateZ(angle), {duration: 500});      
-        updown = updown * -1;
-        translate.setTransform(Transform.translate(0, 100 * updown, 0), {duration: 500, curve: Easing.inCubic })
-    })
-
-    mainContext.add(translate).add(rotate).add(firstSurface);
+    mainContext.add(c.translate).add(c.rotate).add(c.surface);
 });
