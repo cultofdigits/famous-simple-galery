@@ -21,5 +21,9 @@ define(function(require, exports, module) {
         origin: [.5,.5], //выполняем трансформацию относительно центра
     })
 
-    mainContext.add(translate).add(firstSurface);
+    var rotate = new StateModifier({
+        transform: Transform.rotateZ(Math.PI / 4)
+    })
+
+    mainContext.add(translate).add(rotate).add(firstSurface);
 });
