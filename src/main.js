@@ -21,8 +21,15 @@ define(function(require, exports, module) {
         origin: [.5,.5], //выполняем трансформацию относительно центра
     })
 
+    var angle = 0;
+
     var rotate = new StateModifier({
-        transform: Transform.rotateZ(Math.PI / 4)
+        transform: Transform.rotateZ(angle)
+    })
+
+    firstSurface.on("click", function(){
+        angle = angle + Math.PI;
+        rotate.setTransform(Transform.rotateZ(angle), {duration: 500});      
     })
 
     mainContext.add(translate).add(rotate).add(firstSurface);
