@@ -7,6 +7,11 @@ define(function(require, exports, module) {
 
     var mainContext = Engine.createContext();
     mainContext.setPerspective(1000);
+
+    var calc = function(x){
+      return window.innerWidth * x / 1300;
+    }
+
     var Card = function(params){
       var self = this;
       this.getAngle     = (function(){ return params.angle })();
@@ -66,12 +71,12 @@ define(function(require, exports, module) {
       }
 
       return new Card({
-        x: x,
-        y: y,
-        z: z,
+        x: calc(x),
+        y: calc(y),
+        z: calc(z),
         angle:angle,
-        w: w,
-        h: h
+        w: calc(w),
+        h: calc(h)
       });
     }
 
