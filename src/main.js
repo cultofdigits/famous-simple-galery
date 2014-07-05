@@ -50,14 +50,38 @@ define(function(require, exports, module) {
 
     }
 
-    var c = new Card({
-        x: 0,
-        y: 0,
-        z: 0,
-        w: 500,
-        h: 500,
-        angle: 0
-    })
+    var GaleryCard = function (number){
+      this.prototype = Object.create(Card);
 
-    mainContext.add(c.translate).add(c.wind).add(c.rotate).add(c.surface);
+      var level = Math.round(number / 2);
+      var lr = (number   % 2) == 0?-1:1;
+      var x, y = 0, z = -level * 70, angle, w = 400, h = 400;
+
+      if (level == 0){
+        x = 0; y = 0; z = 0; angle = 0;w = 500; h =500;
+      }
+      else{
+        x = (lr * level * 100) + (lr * 70);
+        angle = Math.PI/6* lr;
+      }
+
+      return new Card({
+        x: x,
+        y: y,
+        z: z,
+        angle:angle,
+        w: w,
+        h: h
+      });
+    }
+
+    var cards = [],
+      cardsCount = 7;
+
+    for (var i = 0; i < cardsCount; i++){
+      cards.push(new GaleryCard(i));
+    };
+
+    for (i in cards)
+      mainContext.add(cards[i].translate).add(cards[i].wind).add(cards[i].rotate).add(cards[i].surface);
 });
