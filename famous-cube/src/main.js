@@ -23,10 +23,13 @@ define(function (require, exports, module) {
     var box = new RenderNode();
 
     var scale = new Modifier();
-    var translate = new Modifier({origin:[.5,.5]});
+    var translate = new Modifier({
+      origin:[.5,.5],
+      transform: Transform.translate(0, 0, -(window.innerWidth) / 2)
+    });
     var animate = new Modifier({origin:[.5,.5]});
     var angle =   0;
-
+    var surfaces = [];
 
     var createSurface = function(param){
       var surface =  new Surface({
@@ -39,6 +42,7 @@ define(function (require, exports, module) {
         }
       });
 
+      surfaces.push(surface);
       var modifier = new Modifier(param.modifier);
       box.add(modifier).add(surface)
     }
@@ -56,11 +60,10 @@ define(function (require, exports, module) {
       modifier: {transform : Transform.multiply( Transform.translate(-DEFAULT_WIDTH / 2, 0, 0), Transform.rotateY(-Math.PI/2) ) }
     });
 
-    var setScale = function(){
-      var x = (window.innerWidth) / DEFAULT_WIDTH;
-      var y = (window.innerHeight)/ DEFAULT_HEIGH;
-      scale.setTransform( Transform.scale(x,y,x));
-      translate.setTransform( Transform.translate(0, 0, -(window.innerWidth) / 2));
+    var  setScale = function(){
+      surfaces.forEach(function(e){
+        e.setSize([ window.innerWidth, window.innerHeight]);
+      });
     }
 
     var rotate = new Modifier({
@@ -78,7 +81,6 @@ define(function (require, exports, module) {
       animate: animate,
       angle: angle
     }
-
   }
 
   var cube = new Cube();
@@ -100,5 +102,5 @@ define(function (require, exports, module) {
     );
   })
   cube.setScale();
-  mainContext.add(cube.translate).add(cube.animate).add(cube.scale).add(cube.box);
+  mainContext.add(cube.translate).add(cube.animate).add(cube.box);
 });
