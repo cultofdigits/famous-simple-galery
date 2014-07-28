@@ -30,6 +30,7 @@ define(function (require, exports, module) {
     var animate = new Modifier({origin:[.5,.5]});
     var angle =   0;
     var surfaces = [];
+	var modifiers = [];
 
     var createSurface = function(param){
       var surface =  new Surface({
@@ -44,6 +45,7 @@ define(function (require, exports, module) {
 
       surfaces.push(surface);
       var modifier = new Modifier(param.modifier);
+	  modifiers.push(modifier);
       box.add(modifier).add(surface)
     }
 
@@ -64,6 +66,13 @@ define(function (require, exports, module) {
       surfaces.forEach(function(e){
         e.setSize([ window.innerWidth, window.innerHeight]);
       });
+	  
+	  modifiers[0].setTransform(Transform.translate(0, 0, window.innerWidth / 2));
+	  modifiers[1].setTransform(Transform.multiply(Transform.translate(window.innerWidth / 2, 0, 0),Transform.rotateY(Math.PI/2) ));
+	  modifiers[2].setTransform(Transform.multiply(Transform.translate(0, 0, -window.innerWidth / 2),Transform.rotateY(Math.PI) ));
+	  modifiers[3].setTransform(Transform.multiply( Transform.translate(-window.innerWidth / 2, 0, 0), Transform.rotateY(-Math.PI/2)) );
+	  
+	  translate.setTransform(Transform.translate(0, 0, -(window.innerWidth) / 2));
     }
 
     var rotate = new Modifier({
